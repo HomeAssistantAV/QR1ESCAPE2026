@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#100b0c">
+<title>Épreuve secrète — Maison Laurent-Vincken</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#100b0c; --panel:#211719; --panel2:#2b1d1d;
+  --gold:#d7b779; --gold2:#f0d9a5; --muted:#a99577;
+  --line:rgba(215,183,121,.28); --cream:#f5ead1;
+  --serif:Palatino,"Palatino Linotype",Georgia,serif;
+  --sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{
+  margin:0; min-height:100svh; color:var(--cream); font-family:var(--sans);
+  background:
+    radial-gradient(ellipse at 50% -10%,rgba(116,54,39,.42),transparent 55%),
+    radial-gradient(ellipse at 10% 90%,rgba(102,72,37,.12),transparent 45%),
+    linear-gradient(145deg,#100b0c,#171011 55%,#0d090a);
+  -webkit-font-smoothing:antialiased;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+}
+.page{
+  position:relative; z-index:1; width:min(100%,900px); margin:0 auto;
+  min-height:100svh; padding:clamp(24px,5vh,54px) clamp(16px,4vw,38px) max(28px,env(safe-area-inset-bottom));
+  display:flex; flex-direction:column;
+}
+header{text-align:center;margin-bottom:clamp(22px,4vh,38px)}
+.eyebrow{display:flex;align-items:center;justify-content:center;gap:13px;color:var(--gold);font: .76rem var(--serif);letter-spacing:.25em;text-transform:uppercase}
+.eyebrow:before,.eyebrow:after{content:"";width:clamp(25px,8vw,64px);height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+.eyebrow:after{transform:scaleX(-1)}
+h1{font:clamp(1.7rem,4.7vw,2.65rem)/1.12 var(--serif);letter-spacing:.045em;color:var(--gold2);margin:17px 0 9px;text-shadow:0 3px 18px #000}
+.subtitle{font:italic clamp(.9rem,2.4vw,1.05rem) var(--serif);color:var(--muted);margin:0}
+.intro{
+  border:1px solid var(--line);border-radius:13px;padding:15px 18px;margin-bottom:20px;
+  background:linear-gradient(135deg,rgba(215,183,121,.09),rgba(33,23,25,.72));
+  color:#d6c5a5;text-align:center;font-size:.9rem;line-height:1.55;
+}
+.questions{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.question{
+  min-width:0;padding:clamp(16px,2.5vw,23px);border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(155deg,rgba(49,31,31,.96),rgba(27,19,20,.97));
+  box-shadow:0 12px 30px rgba(0,0,0,.23),inset 0 1px rgba(255,255,255,.035);
+}
+.qtop{display:flex;align-items:center;gap:11px;margin-bottom:15px}
+.number{
+  flex:0 0 32px;height:32px;border:1px solid rgba(215,183,121,.6);border-radius:50%;
+  display:grid;place-items:center;color:var(--gold2);font: .95rem var(--serif);
+}
+.question h2{font:600 clamp(1rem,2.3vw,1.15rem)/1.35 var(--serif);margin:0;color:#f2e4c8}
+.options{display:grid;gap:9px}
+.option{display:block;position:relative;cursor:pointer}
+.option input{position:absolute;opacity:0;pointer-events:none}
+.option span{
+  display:flex;align-items:center;gap:11px;min-height:44px;padding:10px 12px;
+  border:1px solid rgba(215,183,121,.19);border-radius:9px;
+  color:#d5c6aa;background:rgba(8,6,7,.25);font-size:.91rem;line-height:1.3;
+  transition:border-color .18s,background .18s,transform .18s;
+}
+.option span:before{
+  content:"";width:16px;height:16px;flex:0 0 16px;border:1.5px solid #927b56;border-radius:50%;
+  box-shadow:inset 0 0 0 3px transparent;transition:.18s;
+}
+.option input:checked+span{border-color:var(--gold);background:rgba(215,183,121,.13);color:#fff0cf}
+.option input:checked+span:before{background:var(--gold2);border-color:var(--gold2);box-shadow:inset 0 0 0 4px #34251b}
+.option input:focus-visible+span{outline:2px solid var(--gold2);outline-offset:3px}
+.option span:hover{border-color:rgba(215,183,121,.55)}
+.actions{margin-top:22px;text-align:center}
+.check{
+  width:100%;min-height:60px;padding:15px 22px;border:1px solid #98743d;border-radius:10px;
+  color:#2b1d0d;background:linear-gradient(180deg,#f0d9a5,#d0aa68 58%,#b48b4c);
+  box-shadow:0 5px 0 #654a25,0 12px 24px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.7);
+  font:700 1rem var(--serif);letter-spacing:.13em;text-transform:uppercase;cursor:pointer;
+  transition:transform .12s,filter .2s;
+}
+.check:hover{filter:brightness(1.08)}
+.check:active{transform:translateY(4px);box-shadow:0 1px 0 #654a25,0 5px 12px rgba(0,0,0,.3)}
+.check:focus-visible{outline:2px solid var(--gold2);outline-offset:5px}
+.feedback{display:none}
+.hint{
+  display:none;margin:22px auto 0;max-width:690px;padding:23px 22px;border:1px solid rgba(215,183,121,.65);
+  border-radius:12px;text-align:center;background:linear-gradient(145deg,#efe0bd,#d8c092);
+  color:#382613;box-shadow:0 14px 35px rgba(0,0,0,.4);
+}
+.hint.show{display:block;animation:appear .5s ease both}
+.hint-label{font:.7rem var(--sans);letter-spacing:.22em;text-transform:uppercase;color:#80633a}
+.hint p{font:italic clamp(1.15rem,3.4vw,1.55rem)/1.55 var(--serif);margin:12px 0 0}
+footer{margin-top:auto;padding-top:28px;text-align:center;color:#776448;font:.65rem var(--serif);letter-spacing:.24em;text-transform:uppercase}
+@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:620px){
+  .page{padding:24px 15px max(25px,env(safe-area-inset-bottom))}
+  header{margin-bottom:22px}
+  .questions{grid-template-columns:1fr;gap:12px}
+  .question{padding:17px}
+  .intro{margin-bottom:14px}
+  .check{min-height:58px}
+}
+@media(min-width:621px) and (max-width:900px){.questions{gap:12px}.question{padding:17px}}
+@media(orientation:landscape) and (max-height:560px){
+  .page{padding-top:14px}.eyebrow{font-size:.65rem}h1{font-size:1.55rem;margin:8px 0 5px}
+  header{margin-bottom:12px}.intro{padding:9px 14px;margin-bottom:12px}
+  .questions{gap:10px}.question{padding:12px 15px}.qtop{margin-bottom:9px}
+  .options{gap:6px}.option span{min-height:36px;padding:7px 10px}.actions{margin-top:13px}
+  .check{min-height:48px;padding:10px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+.modal{
+  position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;
+  padding:clamp(16px,4vw,32px);padding-bottom:max(16px,env(safe-area-inset-bottom));
+  background:rgba(5,3,4,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.modal.show{display:flex;animation:fadeIn .22s ease both}
+.modal-card{
+  width:min(100%,520px);max-height:min(82svh,680px);overflow:auto;
+  padding:clamp(23px,5vw,38px);border:1px solid rgba(215,183,121,.62);border-radius:17px;
+  text-align:center;background:linear-gradient(155deg,#302020,#1a1214 78%);
+  box-shadow:0 24px 80px rgba(0,0,0,.7),inset 0 1px rgba(255,255,255,.06);
+}
+.modal-symbol{
+  width:48px;height:48px;margin:0 auto 15px;border:1px solid rgba(215,183,121,.6);
+  border-radius:50%;display:grid;place-items:center;color:var(--gold2);font:1.45rem var(--serif);
+}
+.modal-title{font:clamp(1.35rem,4vw,1.8rem)/1.2 var(--serif);color:var(--gold2);margin:0 0 12px}
+.modal-message{font-size:clamp(.92rem,2.5vw,1rem);line-height:1.6;color:#e0d1b5;margin:0}
+.modal-hint{
+  display:none;margin-top:22px;padding:18px 16px;border-radius:11px;
+  border:1px solid rgba(215,183,121,.65);background:linear-gradient(145deg,#efe0bd,#d8c092);color:#382613;
+}
+.modal-hint.show{display:block}
+.modal-hint-label{font:.68rem var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#80633a}
+.modal-hint p{font:italic clamp(1.12rem,3.3vw,1.45rem)/1.55 var(--serif);margin:10px 0 0}
+.modal-close{
+  width:100%;min-height:49px;margin-top:22px;padding:12px 18px;border:1px solid #98743d;border-radius:9px;
+  color:#2b1d0d;background:linear-gradient(180deg,#f0d9a5,#c9a15e);
+  font:700 .9rem var(--serif);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+}
+.modal-close:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:420px){.modal-card{border-radius:14px}.modal-symbol{width:42px;height:42px}}
+@media(prefers-reduced-motion:reduce){.modal.show{animation:none}}
+
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div class="eyebrow">Maison Laurent-Vincken</div>
+    <h1>Quatre questions</h1>
+    <p class="subtitle">Une dernière épreuve avant de découvrir l’indice…</p>
+  </header>
+
+  <div class="intro">Répondez aux quatre questions ci-dessous. Lorsque vous avez terminé, appuyez sur le grand bouton pour vérifier toutes vos réponses.</div>
+
+  <form id="quiz" novalidate>
+    <section class="questions" aria-label="Questions à choix multiple">
+      <article class="question">
+        <div class="qtop"><span class="number">01</span><h2>Combien de plantes y a-t-il dans le salon&nbsp;?</h2></div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="a"><span>3</span></label>
+          <label class="option"><input type="radio" name="q1" value="b"><span>4</span></label>
+          <label class="option"><input type="radio" name="q1" value="c"><span>5</span></label>
+          <label class="option"><input type="radio" name="q1" value="d"><span>6</span></label>
+        </div>
+      </article>
+
+      <article class="question">
+        <div class="qtop"><span class="number">02</span><h2>Combien de coussins y a-t-il sur leur canapé&nbsp;?</h2></div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="a"><span>7</span></label>
+          <label class="option"><input type="radio" name="q2" value="b"><span>8</span></label>
+          <label class="option"><input type="radio" name="q2" value="c"><span>9</span></label>
+          <label class="option"><input type="radio" name="q2" value="d"><span>10</span></label>
+        </div>
+      </article>
+
+      <article class="question">
+        <div class="qtop"><span class="number">03</span><h2>Quel est l’artiste préféré d’Eva&nbsp;?</h2></div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q3" value="a"><span>Madonna</span></label>
+          <label class="option"><input type="radio" name="q3" value="b"><span>Mahmood</span></label>
+          <label class="option"><input type="radio" name="q3" value="c"><span>Pommelien Thijs</span></label>
+          <label class="option"><input type="radio" name="q3" value="d"><span>Anna Pepe</span></label>
+        </div>
+      </article>
+
+      <article class="question">
+        <div class="qtop"><span class="number">04</span><h2>Où Eva et Arne sont-ils partis pour leur tout premier voyage ensemble&nbsp;?</h2></div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q4" value="a"><span>Au Portugal</span></label>
+          <label class="option"><input type="radio" name="q4" value="b"><span>En Italie</span></label>
+          <label class="option"><input type="radio" name="q4" value="c"><span>En Grèce</span></label>
+          <label class="option"><input type="radio" name="q4" value="d"><span>En Espagne</span></label>
+        </div>
+      </article>
+    </section>
+
+    <div class="actions">
+      <button class="check" type="submit">Vérifier les quatre réponses</button>
+      <p class="feedback" id="feedback" aria-live="polite"> </p>
+    </div>
+  </form>
+  <footer>Épreuve Nº 12 · Dossier confidentiel</footer>
+</main>
+
+<div class="modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage" hidden>
+  <div class="modal-card">
+    <div class="modal-symbol" id="modalSymbol" aria-hidden="true">✦</div>
+    <h2 class="modal-title" id="modalTitle">Résultat</h2>
+    <p class="modal-message" id="modalMessage"></p>
+    <section class="modal-hint" id="modalHint">
+      <div class="modal-hint-label">Indice découvert · Deuxième partie</div>
+      <p>La deuxième partie du code est accrochée au mur, en haut, du côté ouest.</p>
+    </section>
+    <button class="modal-close" id="closeModal" type="button">Continuer</button>
+  </div>
+</div>
+<script>
+(() => {
+  const answers = { q1: "c", q2: "c", q3: "b", q4: "d" };
+  const form = document.getElementById("quiz");
+  const modal = document.getElementById("resultModal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalMessage = document.getElementById("modalMessage");
+  const modalSymbol = document.getElementById("modalSymbol");
+  const modalHint = document.getElementById("modalHint");
+  const closeButton = document.getElementById("closeModal");
+  let lastFocus = null;
+
+  function openModal({ title, message, success = false }) {
+    lastFocus = document.activeElement;
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+    modalSymbol.textContent = success ? "✓" : "!";
+    modalHint.classList.toggle("show", success);
+    modal.hidden = false;
+    modal.classList.add("show");
+    document.body.style.overflow = "hidden";
+    closeButton.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove("show");
+    modal.hidden = true;
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+
+  closeButton.addEventListener("click", closeModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !modal.hidden) closeModal();
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const allAnswered = Object.keys(answers).every((name) =>
+      form.querySelector(`input[name="${name}"]:checked`)
+    );
+
+    if (!allAnswered) {
+      openModal({
+        title: "Il manque une réponse",
+        message: "Veuillez répondre aux quatre questions avant de vérifier."
+      });
+      return;
+    }
+
+    const allCorrect = Object.entries(answers).every(([name, answer]) =>
+      form.querySelector(`input[name="${name}"]:checked`).value === answer
+    );
+
+    if (allCorrect) {
+      openModal({
+        title: "Félicitations !",
+        message: "Toutes les réponses sont correctes. Vous avez découvert l’indice !",
+        success: true
+      });
+    } else {
+      const correctCount = Object.entries(answers).filter(([name, answer]) =>
+        form.querySelector(`input[name="${name}"]:checked`).value === answer
+      ).length;
+      const wrongCount = Object.keys(answers).length - correctCount;
+      openModal({
+        title: "Pas encore…",
+        message: `${wrongCount} réponse${wrongCount > 1 ? "s" : ""} incorrecte${wrongCount > 1 ? "s" : ""}. Vérifiez vos réponses encore une fois !`
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>
