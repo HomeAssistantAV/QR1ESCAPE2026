@@ -148,6 +148,29 @@ footer{margin-top:auto;padding-top:28px;text-align:center;color:#776448;font:.65
 @media(max-width:420px){.modal-card{border-radius:14px}.modal-symbol{width:42px;height:42px}}
 @media(prefers-reduced-motion:reduce){.modal.show{animation:none}}
 
+/* Super grote levensechte spin */
+.spider {
+  position: fixed;
+  top: 45%;
+  width: min(520px, 70vw);
+  height: auto;
+  z-index: 9999;
+  pointer-events: none;
+  left: -600px;
+  transform: translateY(-50%) scaleX(1) rotate(90deg);
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.7));
+  opacity: 0.92;
+  transition: none;
+  will-change: left, transform;
+}
+.spider.crawling {
+  animation: crawlBob 0.6s ease-in-out infinite;
+}
+@keyframes crawlBob {
+  0%, 100% { transform: translateY(-50%) scaleX(var(--sx, 1)) rotate(90deg) translateY(0); }
+  50% { transform: translateY(-48%) scaleX(var(--sx, 1)) rotate(92deg) translateY(-8px); }
+}
+
 </style>
 </head>
 <body>
@@ -223,6 +246,9 @@ footer{margin-top:auto;padding-top:28px;text-align:center;color:#776448;font:.65
     <button class="modal-close" id="closeModal" type="button">Continuer</button>
   </div>
 </div>
+
+<img src="spider.png" alt="" class="spider" id="spider" aria-hidden="true">
+
 <script>
 (() => {
   const answers = { q1: "c", q2: "c", q3: "b", q4: "d" };
@@ -297,6 +323,42 @@ footer{margin-top:auto;padding-top:28px;text-align:center;color:#776448;font:.65
       });
     }
   });
+
+  // Super grote spin die om de 20 seconden over het scherm kruipt
+  const spider = document.getElementById("spider");
+  let goingRight = true;
+  const duration = 7000; // 7 seconden om over te steken
+
+  function crawl() {
+    spider.classList.add("crawling");
+    spider.style.transition = `left ${duration}ms linear`;
+
+    if (goingRight) {
+      spider.style.setProperty("--sx", "1");
+      spider.style.left = "-600px";
+      // force reflow
+      spider.offsetWidth;
+      spider.style.left = "calc(100vw + 50px)";
+    } else {
+      spider.style.setProperty("--sx", "-1");
+      spider.style.left = "calc(100vw + 50px)";
+      spider.offsetWidth;
+      spider.style.left = "-600px";
+    }
+
+    setTimeout(() => {
+      spider.classList.remove("crawling");
+      spider.style.transition = "none";
+    }, duration + 100);
+
+    goingRight = !goingRight;
+  }
+
+  // Eerste keer na 2 seconden, daarna elke 20 seconden
+  setTimeout(() => {
+    crawl();
+    setInterval(crawl, 20000);
+  }, 2000);
 })();
 </script>
 </body>
